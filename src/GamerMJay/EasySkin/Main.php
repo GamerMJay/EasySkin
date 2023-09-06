@@ -6,6 +6,7 @@ namespace GamerMJay\EasySkin;
 
 use Exception;
 use GamerMJay\EasySkin\cmd\SkinCommand;
+use Himbeer\LibSkin\LibSkin;
 use pocketmine\entity\Skin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -20,6 +21,18 @@ class Main extends PluginBase {
         $this->getServer()->getCommandMap()->register("skin", new SkinCommand($this));
         $this->saveResources();
         $this->cfg = new Config($this->getDataFolder() . "settings.yml", Config::YAML);
+        foreach (
+            [
+                "LibSkin" => LibSkin::class
+            ] as $virion => $class
+        ) {
+            if (!class_exists($class)) {
+                $this->getLogger()->error($virion . " virion not found. Please download EasySkins from Poggit-CI or use DEVirion (not recommended).");
+                $this->getServer()->getPluginManager()->disablePlugin($this);
+                return;
+            }
+        }
+
     }
 
     public function saveResources(){
